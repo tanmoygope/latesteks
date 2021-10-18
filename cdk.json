@@ -12,6 +12,13 @@
     "@aws-cdk/aws-ecs-patterns:removeDefaultDesiredCount": true,
     "@aws-cdk/aws-rds:lowercaseDbIdentifier": true,
     "@aws-cdk/aws-efs:defaultEncryptionAtRest": true,
-    "@aws-cdk/aws-lambda:recognizeVersionProps": true
+    "@aws-cdk/aws-lambda:recognizeVersionProps": true,
+
+    "eksInstanceType": "m5d.24xlarge",
+    "createNewVpc": "true",
+    "createNameSpace": false,
+    "vpcCidr": "10.0.0.0/16",
+    "vpcCidrPublicMask": 20,
+    "vpcCidrPrivateMask": 18
   }
 }
