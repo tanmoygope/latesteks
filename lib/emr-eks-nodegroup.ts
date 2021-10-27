@@ -17,7 +17,7 @@ export class Eksnodegroups extends cdk.Stack {
     const nodegroupMax = new CfnParameter(this, 'nodegroupMax', {
       type: 'Number',
       description: 'Max number of EKS worker nodes to scale up to',
-      default: 450,
+      default: 10,
     });
     const nodegroupCount = new CfnParameter(this, 'nodegroupCount', {
       type: 'Number',
@@ -32,11 +32,11 @@ export class Eksnodegroups extends cdk.Stack {
     const nodeType = new CfnParameter(this, 'nodegroupInstanceType', {
       type: 'String',
       description: 'Instance Type to be used with nodegroup ng-1',
-      default: 'r5d.24xlarge',
+      default: 't3.medium',
     });
     const nodeAMIVersion = new CfnParameter(this, 'nodeAMIVersion', {
       type: 'String',
-      default: '1.20.10-20211008',
+      default: '1.21.4-20211013	',
       description: 'AMI version used for EKS Worker nodes https://docs.aws.amazon.com/eks/latest/userguide/eks-linux-ami-versions.html',
     });
 

@@ -7,6 +7,8 @@ import { eksVpc, addEndpoints } from './emr-eks-vpc';
 import { setupClusterLogging } from './eks-logging';
 import * as K8sRoleBinding from './rbac/emr-containers-role-binding.json';
 import * as K8sRole from './rbac/emr-containers-role.json'
+import { Key } from '@aws-cdk/aws-kms';
+
 
 interface ekstackprops extends cdk.StackProps {
 }
@@ -18,10 +20,16 @@ export class EmrEksCdkStack extends cdk.Stack {
 
   constructor (scope: cdk.Construct, id: string, props: ekstackprops) {
     super(scope, id, props);
+
+    const clusterKmsKey = new Key(this, 'ekskmskey', {
+      enableKeyRotation: true,
+      alias: cdk.Fn.join('', ['alias/', 'eks/', this.getOrCreateEksName(this)]),
+    });
+
     const k8sversion = new CfnParameter(this, 'k8sVersion', {
       type: 'String',
       description: 'K8s Version',
-      default: '1.20',
+      default: '1.21'
     });
     
     const vpc = this.getOrCreateVpc(this);
@@ -91,10 +99,11 @@ export class EmrEksCdkStack extends cdk.Stack {
     this.cluster = new Cluster(this, 'EKSCluster', {
       version: KubernetesVersion.of(k8sversion.valueAsString),
       defaultCapacity: 0,
-      endpointAccess: EndpointAccess.PUBLIC_AND_PRIVATE,
+      endpointAccess: EndpointAccess.PRIVATE,
       vpc: vpc,
       mastersRole: bastionHostLinux.role,
       clusterName: this.getOrCreateEksName(this),
+      secretsEncryptionKey: clusterKmsKey,
     });
 
     // Allow BastionHost security group access to EKS Control Plane
